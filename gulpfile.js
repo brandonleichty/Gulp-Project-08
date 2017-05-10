@@ -19,14 +19,18 @@ const maps     = require('gulp-sourcemaps');
 // gulp scripts
 //
 // Concatenates, minifies, and copies all of the project’s JavaScript files into an all.min.js
-// file that is then copied to the dist/scripts folder.
+// file that is then copied to the dist/scripts folder. Activates page reload if watch task is running.
 
 gulp.task('scripts', () => {
   return gulp.src('src/**/*.js')
     .pipe(concat('all.min.js'))
+    .pipe(maps.init())
     .pipe(uglify())
-    .pipe(gulp.dest('dist/scripts'));
+    .pipe(maps.write('./'))
+    .pipe(gulp.dest('dist/scripts'))
+    .pipe(connect.reload());
 });
+
 
 
 // gulp styles
@@ -44,6 +48,7 @@ gulp.task('styles', ['compileSass'], () => {
 });
 
 
+
 // gulp compileSass
 //
 // Compiles all scss into css and places corresponding files into the src/css folder.
@@ -51,8 +56,10 @@ gulp.task('styles', ['compileSass'], () => {
 gulp.task('compileSass', () => {
   return gulp.src('src/sass/global.scss')
   .pipe(sass())
-  .pipe(gulp.dest('src/css'));
+  .pipe(gulp.dest('src/css'))
+  .pipe(connect.reload());
 });
+
 
 
 // gulp images
@@ -67,9 +74,11 @@ gulp.task('images', () => {
 });
 
 
+
 // gulp serve
 //
 // Serves the project using a local web server. Looks in the src folder for the index.html file.
+// Livereload set to true.
 
 gulp.task('serve', () =>  {
   connect.server({
@@ -77,3 +86,42 @@ gulp.task('serve', () =>  {
     livereload: true
   });
 });
+
+
+
+// gulp clean
+//
+// Deletes all files and folders in the dist folder.
+
+gulp.task('clean', () => {
+    return del('dist/**/*');
+});
+
+
+
+// gulp watch
+//
+// Runs the server task and then watches for any chances to the JavaScript files.
+// If any chances are are made, the "scripts" task is run and the page is reloaded.
+
+gulp.task('watch', ['serve'], () => {
+    gulp.watch('src/js/**/*.js', ['scripts']);
+    gulp.watch('src/sass/**/*.scss', ['compileSass']);
+});
+
+
+
+// gulp build
+//
+// Runs the clean task (Deletes all files and folders in the dist folder), and then
+// runs: styles, scripts, and images tasks.
+
+gulp.task('build', ['clean'], () => {
+  gulp.start(['styles', 'scripts', 'images']);
+});
+
+
+
+//default Gulp task. Runs when "gulp" entered into command line. Executes the "build" task
+
+gulp.task('default', ['build']);
