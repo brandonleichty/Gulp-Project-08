@@ -8,6 +8,7 @@ const del      = require('del');
 const gulp     = require('gulp');
 const sass     = require('gulp-sass');
 const concat   = require('gulp-concat');
+const eslint   = require('gulp-eslint');
 const uglify   = require('gulp-uglify');
 const rename   = require('gulp-rename');
 const connect  = require('gulp-connect');
@@ -21,7 +22,7 @@ const maps     = require('gulp-sourcemaps');
 // Concatenates, minifies, and copies all of the project’s JavaScript files into an all.min.js
 // file that is then copied to the dist/scripts folder. Activates page reload if watch task is running.
 
-gulp.task('scripts', () => {
+gulp.task('scripts', ['eslint'], () => {
   return gulp.src('src/**/*.js')
     .pipe(concat('all.min.js'))
     .pipe(maps.init())
@@ -31,6 +32,18 @@ gulp.task('scripts', () => {
     .pipe(connect.reload());
 });
 
+
+// gulp eslint
+//
+// JavaScript files will be linted using ESLint and if there’s an error, the error
+// will output to the console and the build process will be halted.
+
+gulp.task('eslint', () => {
+  return gulp.src('src/**/*.js')
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
+});
 
 
 // gulp styles
