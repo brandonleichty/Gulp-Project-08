@@ -93,7 +93,7 @@ gulp.task('images', () => {
 // Serves the project using a local web server. Looks in the src folder for the index.html file.
 // Livereload set to true.
 
-gulp.task('serve', () =>  {
+gulp.task('serve', ['build'], () =>  {
   connect.server({
     root: 'src',
     livereload: true
