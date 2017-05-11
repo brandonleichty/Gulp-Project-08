@@ -80,13 +80,16 @@ gulp.task('compileSass', () => {
 // Optimizes the size of the project’s JPEG and PNG files, and then copy those
 // optimized images to the dist/content folder.
 
-gulp.task('images', () => {
+gulp.task('images', ['icons'], () => {
     return gulp.src('src/images/*')
         .pipe(imagemin())
-        .pipe(gulp.dest('dist/content'))
+        .pipe(gulp.dest('dist/content'));
 });
 
-
+gulp.task('icons', () => {
+  return gulp.src('src/icons/**/*')
+  .pipe(gulp.dest('dist/content/icons'));
+});
 
 // gulp serve
 //
