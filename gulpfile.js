@@ -13,6 +13,7 @@ const uglify   = require('gulp-uglify');
 const rename   = require('gulp-rename');
 const connect  = require('gulp-connect');
 const imagemin = require('gulp-imagemin');
+const cleanCSS = require('gulp-clean-css');
 const maps     = require('gulp-sourcemaps');
 
 
@@ -56,6 +57,7 @@ gulp.task('styles', ['compileSass'], () => {
   .pipe(concat('all.min.scss'))
   .pipe(maps.init())
   .pipe(sass())
+  .pipe(cleanCSS())
   .pipe(maps.write('./'))
   .pipe(gulp.dest('dist/styles'));
 });
