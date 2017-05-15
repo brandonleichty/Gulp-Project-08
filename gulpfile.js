@@ -68,11 +68,13 @@ gulp.task('styles', ['compileSass'], () => {
 /**
  * gulp compileSass
  *
- * compiles all scss into css and places corresponding files into the src/css folder.
+ * compiles  and minifices all scss into css and places corresponding files into the src/css folder.
+ * this is for development purposes. 
  */
 gulp.task('compileSass', () => {
   return gulp.src('src/sass/global.scss')
   .pipe(sass())
+  .pipe(cleanCSS())
   .pipe(gulp.dest('src/css'))
   .pipe(connect.reload());
 });
